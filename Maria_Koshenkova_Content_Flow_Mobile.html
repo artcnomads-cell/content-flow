@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Maria Koshenkova — Content Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rose: #c4526e;
+  --rose-light: #e8a0b4;
+  --rose-pale: #f5d5df;
+  --deep: #1a1018;
+  --warm-dark: #2a1f27;
+  --glass-blue: #7ba5b8;
+  --glass-teal: #5d9aa3;
+  --amber: #c9935a;
+  --cream: #f7f0ea;
+  --text: #3a2d35;
+  --text-light: #8a7580;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--deep);
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.bg-layer {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-layer::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: 
+    radial-gradient(ellipse at 20% 50%, rgba(196,82,110,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(123,165,184,0.08) 0%, transparent 50%);
+  animation: drift 25s ease-in-out infinite;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(2%, -1%); }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  padding: 32px 20px 60px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 36px;
+  animation: fadeUp 0.8s ease-out;
+}
+
+.header-line {
+  width: 40px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  margin: 0 auto 20px;
+}
+
+.header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 2.4rem;
+  color: var(--cream);
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+}
+
+.header h1 em {
+  font-style: italic;
+  color: var(--rose-light);
+}
+
+.header .subtitle {
+  font-weight: 200;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+.header .name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: var(--glass-blue);
+  letter-spacing: 0.1em;
+  margin-top: 14px;
+}
+
+/* Stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s ease-out 0.15s both;
+}
+
+.stat {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(232,160,180,0.1);
+  border-radius: 14px;
+  padding: 18px 10px;
+  text-align: center;
+}
+
+.stat-n {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 2.2rem;
+  color: var(--rose-light);
+  line-height: 1;
+}
+
+.stat-l {
+  font-size: 0.65rem;
+  color: var(--text-light);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.stat-d {
+  font-size: 0.72rem;
+  color: rgba(247,240,234,0.4);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* Month tabs */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.8s ease-out 0.25s both;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(232,160,180,0.1);
+  border-radius: 20px;
+  padding: 9px 18px;
+  color: var(--cream);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.tab.active {
+  background: rgba(196,82,110,0.18);
+  border-color: var(--rose);
+  color: var(--rose-light);
+}
+
+/* Month view */
+.month {
+  animation: fadeUp 0.5s ease-out;
+}
+
+.month-head {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.month-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 1.6rem;
+  color: var(--cream);
+  letter-spacing: 0.04em;
+}
+
+.month-sub {
+  font-size: 0.72rem;
+  color: var(--glass-blue);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* Weeks */
+.weeks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.week {
+  background: rgba(247,240,234,0.03);
+  border: 1px solid rgba(232,160,180,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.week.open {
+  border-color: rgba(232,160,180,0.18);
+}
+
+.week-top {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.week-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--cream);
+  flex-shrink: 0;
+}
+
+.tags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.t {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 12px;
+  font-weight: 400;
+}
+
+.t-p { background: rgba(196,82,110,0.13); color: var(--rose-light); }
+.t-r { background: rgba(123,165,184,0.13); color: var(--glass-blue); }
+.t-s { background: rgba(201,147,90,0.13); color: var(--amber); }
+.t-c { background: rgba(93,154,163,0.13); color: var(--glass-teal); }
+
+.arrow {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.week.open .arrow { transform: rotate(180deg); }
+
+.week-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.week.open .week-body {
+  max-height: 800px;
+}
+
+.tasks {
+  padding: 0 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 10px;
+  border-left: 2px solid;
+}
+
+.task-p { border-left-color: var(--rose); }
+.task-r { border-left-color: var(--glass-blue); }
+.task-s { border-left-color: var(--amber); }
+.task-c { border-left-color: var(--glass-teal); }
+
+.chk {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid rgba(232,160,180,0.25);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+}
+
+.chk.done {
+  background: var(--rose);
+  border-color: var(--rose);
+}
+
+.chk.done::after {
+  content: '✓';
+  color: #fff;
+  font-size: 0.6rem;
+}
+
+.task-body { flex: 1; }
+
+.task-t {
+  font-size: 0.84rem;
+  color: var(--cream);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.task-d {
+  font-size: 0.72rem;
+  color: var(--text-light);
+  line-height: 1.45;
+  margin-top: 3px;
+}
+
+.task-when {
+  font-size: 0.62rem;
+  color: var(--text-light);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* What we need section */
+.need {
+  background: linear-gradient(135deg, rgba(196,82,110,0.07), rgba(123,165,184,0.05));
+  border: 1px solid rgba(232,160,180,0.12);
+  border-radius: 16px;
+  padding: 24px 20px;
+  margin-top: 32px;
+}
+
+.need h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: var(--cream);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.need-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.need-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: rgba(247,240,234,0.55);
+  line-height: 1.4;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-r { background: var(--rose-light); }
+.dot-b { background: var(--glass-blue); }
+.dot-a { background: var(--amber); }
+.dot-t { background: var(--glass-teal); }
+
+/* Footer */
+.foot {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(232,160,180,0.06);
+}
+
+.foot p {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: rgba(232,160,180,0.3);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+<div class="container">
+
+  <div class="header">
+    <div class="header-line"></div>
+    <h1>Content <em>Flow</em></h1>
+    <div class="subtitle">Instagram — план</div>
+    <div class="name">Мария Кошенкова</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-n">4</div>
+      <div class="stat-l">Фото</div>
+      <div class="stat-d">Подборки и портреты</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">2</div>
+      <div class="stat-l">Reels</div>
+      <div class="stat-d">Процесс и закулисье</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">4</div>
+      <div class="stat-l">Stories</div>
+      <div class="stat-d">Живой контакт</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showM(0)">Месяц 1</div>
+    <div class="tab" onclick="showM(1)">Месяц 2</div>
+    <div class="tab" onclick="showM(2)">Месяц 3</div>
+  </div>
+
+  <!-- MONTH 1 -->
+  <div class="month" id="m0">
+    <div class="month-head">
+      <div class="month-title">Первый месяц</div>
+      <div class="month-sub">Фундамент · Настройка ритма</div>
+    </div>
+    <div class="weeks">
+
+      <div class="week open">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 1</div>
+          <div class="tags"><span class="t t-c">сбор</span><span class="t t-p">фото</span><span class="t t-s">stories</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-c">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Собрать фото с последних выставок</div>
+              <div class="task-d">8–12 снимков работ + 3–4 портрета. Прислать в папку.</div>
+            </div>
+            <div class="task-when">пн–ср</div>
+          </div>
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №1 — Карусель с выставки</div>
+              <div class="task-d">5–8 фото работ в экспозиции. Текст: история, контекст.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+          <div class="task task-s">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Stories: закулисье подготовки</div>
+              <div class="task-d">2–3 stories из мастерской. Живые, без фильтров.</div>
+            </div>
+            <div class="task-when">пт</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="week">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 2</div>
+          <div class="tags"><span class="t t-p">фото</span><span class="t t-r">reels</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №2 — Портрет художника</div>
+              <div class="task-d">Фото из сессии + личная история о вдохновении.</div>
+            </div>
+            <div class="task-when">пн</div>
+          </div>
+          <div class="task task-r">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Reels №1 — Процесс создания</div>
+              <div class="task-d">15–30 сек: руки, стекло, свет, плавление. Атмосферная музыка.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="week">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 3</div>
+          <div class="tags"><span class="t t-p">фото</span><span class="t t-s">stories</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №3 — Деталь / текстура</div>
+              <div class="task-d">Макро: свет, преломление, хрупкость стекла.</div>
+            </div>
+            <div class="task-when">вт</div>
+          </div>
+          <div class="task task-s">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Stories: вдохновение</div>
+              <div class="task-d">Что читаете, смотрите, где бываете. Мир за мастерской.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="week">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 4</div>
+          <div class="tags"><span class="t t-p">фото</span><span class="t t-r">reels</span><span class="t t-s">stories</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №4 — Работа в пространстве</div>
+              <div class="task-d">Фото с выставки или в интерьере. Как объект живёт.</div>
+            </div>
+            <div class="task-when">пн</div>
+          </div>
+          <div class="task task-r">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Reels №2 — До и после</div>
+              <div class="task-d">Эскиз → процесс → готовая работа. 20 секунд динамики.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+          <div class="task task-s">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Stories: итоги месяца</div>
+              <div class="task-d">Что сделано, что впереди. Благодарность аудитории.</div>
+            </div>
+            <div class="task-when">сб</div>
+          </div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MONTH 2 -->
+  <div class="month" id="m1" style="display:none;">
+    <div class="month-head">
+      <div class="month-title">Второй месяц</div>
+      <div class="month-sub">Углубление · Личная история</div>
+    </div>
+    <div class="weeks">
+
+      <div class="week open">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 1</div>
+          <div class="tags"><span class="t t-c">сбор</span><span class="t t-p">фото</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-c">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Собрать: серия работ + эскизы</div>
+              <div class="task-d">Архив эскизов, фото серий Bodegones / Shibari / Hearts.</div>
+            </div>
+            <div class="task-when">пн–ср</div>
+          </div>
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №1 — От концепции к стеклу</div>
+              <div class="task-d">История серии: эскизы → стекло → экспозиция.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="week">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 2</div>
+          <div class="tags"><span class="t t-p">фото</span><span class="t t-r">reels</span><span class="t t-s">stories</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №2 — Портрет в мастерской</div>
+              <div class="task-d">Художник в своей среде. О рутине и тишине в работе.</div>
+            </div>
+            <div class="task-when">вт</div>
+          </div>
+          <div class="task task-r">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Reels №1 — Мастерская / Копенгаген</div>
+              <div class="task-d">Город, дорога, свет, стекло. Скандинавская атмосфера.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+          <div class="task task-s">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Stories: опрос для аудитории</div>
+              <div class="task-d">«Какая работа трогает больше всего?» — стикер-опрос.</div>
+            </div>
+            <div class="task-when">пт</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="week">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 3</div>
+          <div class="tags"><span class="t t-p">фото</span><span class="t t-s">stories</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №3 — Работа в коллекции</div>
+              <div class="task-d">Как стекло живёт вне галереи. В интерьере, в свете.</div>
+            </div>
+            <div class="task-when">вт</div>
+          </div>
+          <div class="task task-s">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Stories: 5 фактов о стекле</div>
+              <div class="task-d">Температуры, техники, время. Образовательный контент.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="week">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 4</div>
+          <div class="tags"><span class="t t-p">фото</span><span class="t t-r">reels</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №4 — Хрупкость и сила</div>
+              <div class="task-d">Канат из стекла, сердце. Философия материала.</div>
+            </div>
+            <div class="task-when">вт</div>
+          </div>
+          <div class="task task-r">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Reels №2 — Выставка глазами художника</div>
+              <div class="task-d">Проход по экспозиции, монтаж. Скрытое от зрителя.</div>
+            </div>
+            <div class="task-when">пт</div>
+          </div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MONTH 3 -->
+  <div class="month" id="m2" style="display:none;">
+    <div class="month-head">
+      <div class="month-title">Третий месяц</div>
+      <div class="month-sub">Расширение · Рост</div>
+    </div>
+    <div class="weeks">
+
+      <div class="week open">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 1</div>
+          <div class="tags"><span class="t t-c">сбор</span><span class="t t-p">фото</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-c">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Собрать: коллаборации, пресса</div>
+              <div class="task-d">Публикации, фото с международных проектов.</div>
+            </div>
+            <div class="task-when">пн–ср</div>
+          </div>
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №1 — Международный контекст</div>
+              <div class="task-d">Милан, Венеция, Япония. География и масштаб.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="week">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 2</div>
+          <div class="tags"><span class="t t-p">фото</span><span class="t t-r">reels</span><span class="t t-s">stories</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №2 — Портрет + вдохновение</div>
+              <div class="task-d">Любимые художники, влияния. Контекст в истории искусства.</div>
+            </div>
+            <div class="task-when">вт</div>
+          </div>
+          <div class="task task-r">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Reels №1 — «Что видит художник» POV</div>
+              <div class="task-d">От первого лица: утро, мастерская, свет на стекле.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+          <div class="task task-s">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Stories: Q&A от подписчиков</div>
+              <div class="task-d">Стикер «задай вопрос». Ответы на следующий день.</div>
+            </div>
+            <div class="task-when">пт</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="week">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 3</div>
+          <div class="tags"><span class="t t-p">фото</span><span class="t t-s">stories</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №3 — Новая работа / анонс</div>
+              <div class="task-d">Премьера объекта. Эксклюзив для Instagram.</div>
+            </div>
+            <div class="task-when">вт</div>
+          </div>
+          <div class="task task-s">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Stories: процесс создания</div>
+              <div class="task-d">Быстрые видео из мастерской, рабочие моменты.</div>
+            </div>
+            <div class="task-when">чт</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="week">
+        <div class="week-top" onclick="tog(this)">
+          <div class="week-name">Неделя 4</div>
+          <div class="tags"><span class="t t-p">фото</span><span class="t t-r">reels</span></div>
+          <div class="arrow">⌄</div>
+        </div>
+        <div class="week-body"><div class="tasks">
+          <div class="task task-p">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Пост №4 — Итоги квартала</div>
+              <div class="task-d">Лучшее за 3 месяца. Рост, планы, благодарность.</div>
+            </div>
+            <div class="task-when">вт</div>
+          </div>
+          <div class="task task-r">
+            <div class="chk" onclick="this.classList.toggle('done')"></div>
+            <div class="task-body">
+              <div class="task-t">Reels №2 — Квартал за 30 секунд</div>
+              <div class="task-d">Нарезка: стекло, руки, свет, выставки, эмоции.</div>
+            </div>
+            <div class="task-when">пт</div>
+          </div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- What we need -->
+  <div class="need">
+    <h3>Что нужно от Марии</h3>
+    <div class="need-grid">
+      <div class="need-item"><div class="dot dot-r"></div>8–12 фото работ с выставок</div>
+      <div class="need-item"><div class="dot dot-r"></div>3–4 портрета из фотосессий</div>
+      <div class="need-item"><div class="dot dot-b"></div>2–3 видео из мастерской (15–60 сек)</div>
+      <div class="need-item"><div class="dot dot-a"></div>Фото эскизов и рабочих моментов</div>
+      <div class="need-item"><div class="dot dot-a"></div>Мысли / голосовые для текстов</div>
+      <div class="need-item"><div class="dot dot-t"></div>Новости: выставки, публикации, планы</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p>«Стекло обладает всей палитрой живописи»</p>
+  </div>
+
+</div>
+
+<script>
+function showM(i) {
+  document.querySelectorAll('.month').forEach((el, j) => el.style.display = j === i ? 'block' : 'none');
+  document.querySelectorAll('.tab').forEach((el, j) => el.classList.toggle('active', j === i));
+}
+function tog(el) {
+  el.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>
